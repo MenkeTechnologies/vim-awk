@@ -1,0 +1,168 @@
+*awk.txt*   Syntax, filetype, indent, linting and LSP support for AWK (awkrs)
+
+                              vim-awk manual
+
+==============================================================================
+CONTENTS                                                          *vim-awk*
+
+    1. Introduction ........................... |vim-awk-intro|
+    2. Installation ........................... |vim-awk-install|
+    3. Filetype detection ..................... |vim-awk-ftdetect|
+    4. Syntax highlighting .................... |vim-awk-syntax|
+    5. Running (:make / :AwkRun) .............. |vim-awk-run|
+    6. Linting (ALE) .......................... |vim-awk-ale|
+    7. Language server (LSP) .................. |vim-awk-lsp|
+    8. Debug adapter (DAP) .................... |vim-awk-dap|
+    9. Options ................................ |vim-awk-options|
+
+==============================================================================
+1. INTRODUCTION                                             *vim-awk-intro*
+
+vim-awk adds Vim / Neovim support for AWK, targeting awkrs — a pattern /
+action engine written in Rust with a POSIX / gawk / mawk-style union CLI. It
+provides:
+
+    - filetype detection for *.awk files and awk / awkrs shebangs
+    - standalone AWK syntax highlighting (POSIX core + gawk / mawk extensions)
+    - brace-aware indentation
+    - `:make` / `:AwkRun` wiring through the awkrs binary
+    - ALE linting via `awkrs -L invalid`
+    - vim-lsp / coc.nvim registration via `awkrs --lsp`
+    - nvim-dap guidance via `awkrs --dap`
+
+==============================================================================
+2. INSTALLATION                                           *vim-awk-install*
+
+pathogen (https://github.com/tpope/vim-pathogen): >
+    cd ~/.vim/bundle
+    git clone https://github.com/MenkeTechnologies/vim-awk
+<
+Then generate help tags: >
+    :Helptags
+<
+vim-plug: >
+    Plug 'MenkeTechnologies/vim-awk'
+<
+Native packages (Vim 8+ / Neovim): >
+    git clone https://github.com/MenkeTechnologies/vim-awk \
+        ~/.vim/pack/plugins/start/vim-awk
+<
+The `awkrs` binary must be on $PATH for running, linting and LSP to work.
+
+==============================================================================
+3. FILETYPE DETECTION                                    *vim-awk-ftdetect*
+
+Buffers are set to the "awk" filetype when:
+
+    - the filename ends in *.awk, or
+    - line 1 is a shebang naming awkrs / awk / gawk / mawk / nawk,
+      e.g. `#!/usr/bin/env awkrs`.
+
+==============================================================================
+4. SYNTAX HIGHLIGHTING                                     *vim-awk-syntax*
+
+A standalone AWK grammar covering POSIX awk plus the gawk / mawk extensions
+awkrs accepts in its union CLI:
+
+    patterns      BEGIN END BEGINFILE ENDFILE / regex / patterns
+    control flow  if else while for do break continue next nextfile exit
+                  return delete in
+    statements    print printf getline
+    function def  function func
+    builtin vars  NR NF FS OFS ORS RS FILENAME FNR RSTART RLENGTH SUBSEP
+                  ARGC ARGV ENVIRON CONVFMT OFMT (+ gawk FPAT IGNORECASE RT …)
+    builtin fns   length substr index split sub gsub match sprintf sin cos
+                  atan2 exp log sqrt int rand srand tolower toupper system
+                  close fflush (+ gawk gensub strftime systime and/or/xor …)
+
+Field references (`$0` `$1` `$NF` `$(expr)`), ERE regex literals `/.../`,
+double-quoted strings with escapes, `#` comments, numbers, and the full
+operator set are handled. Everything links to standard highlight groups, so
+every colorscheme covers it.
+
+The token surface is hand-curated (AWK's grammar is small and fixed).
+`scripts/gen_syntax.sh` stamps the file with the awkrs version it was
+verified against.
+
+==============================================================================
+5. RUNNING                                                   *vim-awk-run*
+
+The ftplugin sets `:compiler awkrs`, so `:make` runs the current program
+through awkrs in lint mode and routes diagnostics to the quickfix list: >
+    :make
+<
+To execute the current buffer as an AWK program: >
+    :AwkRun [files...]
+<
+Mapped by default to <LocalLeader>r (disable with `g:vim_awk_no_maps`).
+
+==============================================================================
+6. LINTING (ALE)                                             *vim-awk-ale*
+
+When ALE (https://github.com/dense-analysis/ale) is installed, vim-awk
+registers a linter that runs: >
+    awkrs -L invalid -f %t
+<
+Diagnostics of the form "<file>:<line>: <message>" (or "<message> at <file>
+line <n>") are surfaced inline.
+
+==============================================================================
+7. LANGUAGE SERVER (LSP)                                     *vim-awk-lsp*
+
+vim-lsp (https://github.com/prabirshrestha/vim-lsp): registered automatically
+as: >
+    awkrs --lsp
+<
+allowlisted for the "awk" filetype. The `--lsp` subcommand is not present in
+awkrs v0.4.14 (the binary rejects it there); this registration is forward-
+looking and guarded — vim-lsp will not start a server the binary refuses, so
+the plugin loads and lints cleanly today. When awkrs ships `--lsp`, invoke it
+with ONLY `--lsp` (no appended `--stdio`), mirroring `stryke --lsp`.
+
+coc.nvim: add to coc-settings.json: >
+    {
+      "languageserver": {
+        "awkrs": {
+          "command": "awkrs",
+          "args": ["--lsp"],
+          "filetypes": ["awk"]
+        }
+      }
+    }
+<
+==============================================================================
+8. DEBUG ADAPTER (DAP)                                       *vim-awk-dap*
+
+awkrs is wired for a Debug Adapter via `awkrs --dap` (DAP on stdio). The
+`--dap` subcommand is not present in awkrs v0.4.14 (the binary rejects it
+there); this is forward-looking guidance for when awkrs ships it. For
+nvim-dap (https://github.com/mfussenegger/nvim-dap): >
+    local dap = require('dap')
+    dap.adapters.awkrs = {
+      type = 'executable',
+      command = 'awkrs',
+      args = { '--dap' },   -- no extra transport args; awkrs rejects them
+    }
+    dap.configurations.awk = {
+      { type = 'awkrs', request = 'launch', name = 'Run AWK program',
+        program = '${file}' },
+    }
+<
+As with LSP, invoke awkrs with ONLY `--dap`.
+
+==============================================================================
+9. OPTIONS                                               *vim-awk-options*
+
+                                                       *g:vim_awk_no_ale*
+Set to 1 before load to skip ALE linter registration: >
+    let g:vim_awk_no_ale = 1
+<
+                                                       *g:vim_awk_no_lsp*
+Set to 1 before load to skip vim-lsp server registration: >
+    let g:vim_awk_no_lsp = 1
+<
+                                                       *g:vim_awk_no_maps*
+Set to 1 before load to skip the <LocalLeader>r run mapping: >
+    let g:vim_awk_no_maps = 1
+<
+ vim:tw=78:ts=8:ft=help:norl:
