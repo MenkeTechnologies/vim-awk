@@ -113,11 +113,8 @@ vim-lsp (https://github.com/prabirshrestha/vim-lsp): registered automatically
 as: >
     awkrs --lsp
 <
-allowlisted for the "awk" filetype. The `--lsp` subcommand is not present in
-awkrs v0.4.14 (the binary rejects it there); this registration is forward-
-looking and guarded — vim-lsp will not start a server the binary refuses, so
-the plugin loads and lints cleanly today. When awkrs ships `--lsp`, invoke it
-with ONLY `--lsp` (no appended `--stdio`), mirroring `stryke --lsp`.
+allowlisted for the "awk" filetype. Invoke `awkrs --lsp` with ONLY `--lsp`
+(no appended `--stdio`), mirroring `stryke --lsp`.
 
 coc.nvim: add to coc-settings.json: >
     {
@@ -133,9 +130,7 @@ coc.nvim: add to coc-settings.json: >
 ==============================================================================
 8. DEBUG ADAPTER (DAP)                                       *vim-awk-dap*
 
-awkrs is wired for a Debug Adapter via `awkrs --dap` (DAP on stdio). The
-`--dap` subcommand is not present in awkrs v0.4.14 (the binary rejects it
-there); this is forward-looking guidance for when awkrs ships it. For
+awkrs is wired for a Debug Adapter via `awkrs --dap` (DAP on stdio). For
 nvim-dap (https://github.com/mfussenegger/nvim-dap): >
     local dap = require('dap')
     dap.adapters.awkrs = {

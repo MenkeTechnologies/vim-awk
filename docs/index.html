@@ -193,7 +193,7 @@ git clone https://github.com/MenkeTechnologies/vim-awk \
           </div>
           <div class="cat-card">
             <h4>Language server &amp; debugger</h4>
-            <p>Registers <code>awkrs --lsp</code> for <a href="https://github.com/prabirshrestha/vim-lsp" target="_blank" rel="noopener noreferrer">vim-lsp</a> (filetype <code>awk</code>); coc.nvim + nvim-dap (<code>awkrs --dap</code>) snippets in the README. The <code>--lsp</code> / <code>--dap</code> subcommands are not yet in awkrs v0.4.14 — the wiring is forward-looking and guarded, so the plugin still loads cleanly today.</p>
+            <p>Registers <code>awkrs --lsp</code> for <a href="https://github.com/prabirshrestha/vim-lsp" target="_blank" rel="noopener noreferrer">vim-lsp</a> (filetype <code>awk</code>) — diagnostics, hover, completion; coc.nvim + nvim-dap (<code>awkrs --dap</code>) snippets in the README. Each is invoked with only its flag (no appended <code>--stdio</code>), and the wiring is guarded so the plugin still loads cleanly if the binary is absent.</p>
           </div>
           <div class="cat-card">
             <h4>Zero config</h4>
@@ -244,9 +244,9 @@ git clone https://github.com/MenkeTechnologies/vim-awk \
             <tr><td>Vim 8+</td><td class="ok">Filetype, syntax, indent, ftplugin, compiler</td></tr>
             <tr><td>Neovim</td><td class="ok">Same runtime files</td></tr>
             <tr><td>ALE</td><td class="ok"><code>awkrs -L invalid</code> linter</td></tr>
-            <tr><td>vim-lsp</td><td class="warn"><code>awkrs --lsp</code> server (forward-looking; flag not yet in v0.4.14)</td></tr>
-            <tr><td>coc.nvim</td><td class="warn">languageserver config in README (forward-looking)</td></tr>
-            <tr><td>nvim-dap</td><td class="warn"><code>awkrs --dap</code> adapter config in README (forward-looking)</td></tr>
+            <tr><td>vim-lsp</td><td class="ok"><code>awkrs --lsp</code> language server</td></tr>
+            <tr><td>coc.nvim</td><td class="ok"><code>languageserver</code> config in README</td></tr>
+            <tr><td>nvim-dap</td><td class="ok"><code>awkrs --dap</code> debug adapter config in README</td></tr>
           </tbody>
         </table>
       </section>

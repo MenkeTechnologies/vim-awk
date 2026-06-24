@@ -1,17 +1,17 @@
 " vim-awk — language-server / linter wiring for AWK (awkrs)
 "
-" Flags verified against `awkrs --help` (v0.4.14):
+" awkrs CLI flags used here:
 "   -L, --lint <fatal|invalid|no-ext>   static lint (parse + check, no run)
 "   -f, --file <PROGFILE>               read the AWK program from a file
+"   --lsp                               Language Server (JSON-RPC on stdio)
+"   --dap                               Debug Adapter (DAP on stdio)
 "
-" LSP / DAP note: the wiring below registers `awkrs --lsp` (Language Server,
+" LSP / DAP: the wiring below registers `awkrs --lsp` (Language Server,
 " JSON-RPC on stdio) and documents `awkrs --dap` (Debug Adapter, DAP on stdio).
-" These two subcommands are NOT present in awkrs v0.4.14 (the binary rejects
-" `--lsp` / `--dap` there); the registration is forward-looking and is fully
-" guarded — vim-lsp will not start a server the binary refuses, so the plugin
-" loads and lints cleanly today. When awkrs ships `--lsp` / `--dap`, each MUST
-" be invoked with ONLY that flag (no appended `--stdio`), mirroring
-" `stryke --lsp`; vim-lsp / nvim-dap clients must NOT add transport args.
+" Each MUST be invoked with ONLY that flag (no appended `--stdio`), mirroring
+" `stryke --lsp`; vim-lsp / nvim-dap clients must NOT add transport args. The
+" wiring is guarded so the plugin still loads and lints cleanly if the binary
+" is absent.
 "
 " Opt-outs:
 "   let g:vim_awk_no_ale = 1   " skip ALE linter registration

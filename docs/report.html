@@ -88,7 +88,7 @@
             <a href="https://github.com/MenkeTechnologies/vim-awk" target="_blank" rel="noopener noreferrer">GitHub</a>
           </nav>
           <p style="margin:0.35rem 0 0;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:0.03em;opacity:0.75;">
-            Vim / Neovim support for AWK (awkrs) &middot; standalone AWK grammar (POSIX core + gawk / mawk extensions) &middot; *.awk + shebang filetype detection &middot; :make / :AwkRun &middot; ALE lint via awkrs -L invalid &middot; vim-lsp / coc / nvim-dap wiring for awkrs --lsp / --dap (forward-looking)
+            Vim / Neovim support for AWK (awkrs) &middot; standalone AWK grammar (POSIX core + gawk / mawk extensions) &middot; *.awk + shebang filetype detection &middot; :make / :AwkRun &middot; ALE lint via awkrs -L invalid &middot; vim-lsp / coc / nvim-dap wiring for awkrs --lsp / --dap
           </p>
         </div>
         <div class="tutorial-toolbar">
@@ -156,7 +156,7 @@
 
       <hr class="section-rule">
       <h2 class="tutorial-title"><span class="step-hash">#</span>TOOLING INTEGRATION</h2>
-      <p class="tutorial-subtitle">All integrations degrade gracefully: each is guarded so the plugin loads cleanly whether or not ALE / vim-lsp / coc / nvim-dap is installed. CLI flags verified against <code>awkrs --help</code> (v0.4.14): <code>-L invalid</code> lints and <code>-f</code> reads the program file. The <code>--lsp</code> / <code>--dap</code> subcommands are not present in v0.4.14 (the binary rejects them); the vim-lsp / nvim-dap wiring is forward-looking and guarded, ready for when awkrs ships them (each must then be the sole flag, mirroring <code>stryke --lsp</code>).</p>
+      <p class="tutorial-subtitle">All integrations degrade gracefully: each is guarded so the plugin loads cleanly whether or not ALE / vim-lsp / coc / nvim-dap is installed. <code>-L invalid</code> lints, <code>-f</code> reads the program file, <code>--lsp</code> starts the language server, and <code>--dap</code> the debug adapter. Each of <code>--lsp</code> / <code>--dap</code> is the sole flag (no appended <code>--stdio</code>), mirroring <code>stryke --lsp</code>; the vim-lsp / nvim-dap clients add no transport args.</p>
 
       <table class="parity-table">
         <thead><tr><th>Integration</th><th>Mechanism</th></tr></thead>
@@ -179,9 +179,9 @@
           <tr><td>Neovim</td><td class="ok">Same runtime files (no Lua required for the core)</td></tr>
           <tr><td>pathogen / vim-plug / native packages</td><td class="ok">Standard runtime layout &mdash; no plugin-manager-specific handling</td></tr>
           <tr><td>ALE</td><td class="ok"><code>awkrs -L invalid</code> linter</td></tr>
-          <tr><td>vim-lsp</td><td class="warn"><code>awkrs --lsp</code> server wired (forward-looking; flag not yet in v0.4.14)</td></tr>
-          <tr><td>coc.nvim</td><td class="warn"><code>languageserver</code> config provided (forward-looking)</td></tr>
-          <tr><td>nvim-dap</td><td class="warn"><code>awkrs --dap</code> adapter config provided (forward-looking)</td></tr>
+          <tr><td>vim-lsp</td><td class="ok"><code>awkrs --lsp</code> language server wired</td></tr>
+          <tr><td>coc.nvim</td><td class="ok"><code>languageserver</code> config provided</td></tr>
+          <tr><td>nvim-dap</td><td class="ok"><code>awkrs --dap</code> adapter config provided</td></tr>
         </tbody>
       </table>
 
