@@ -2,7 +2,7 @@
 "
 " Wires `:make` to run the current AWK program through the awkrs binary
 " in lint mode, so parse / static-check diagnostics land in the quickfix
-" list. Flags verified against `awkrs --help` (v0.4.14):
+" list. Flags verified against `awkrs --help` (v0.4.18):
 "   -L, --lint <fatal|invalid|no-ext>   static lint level
 "   -f, --file <PROGFILE>               read the AWK program from a file
 

@@ -6,7 +6,7 @@
 " literals, built-in variables, and built-in functions. Everything links to
 " standard highlight groups, so every colorscheme covers it.
 "
-" Verified against awkrs 0.4.14 — pattern / action engine
+" Verified against awkrs 0.4.18 — pattern / action engine
 " (POSIX / gawk / mawk-style union CLI).
 
 if exists('b:current_syntax')
